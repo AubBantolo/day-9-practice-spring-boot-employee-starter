@@ -105,12 +105,12 @@ class EmployeeApiTest {
     @Test
     void should_delete_employee_by_id() throws Exception {
         Employee employee = getEmployeeBob();
-        employeeJpaRepository.save(employee);
+        Employee savedEmployee = employeeJpaRepository.save(employee);
 
-        mockMvc.perform(delete("/employees/{id}", 1))
+        mockMvc.perform(delete("/employees/{id}", savedEmployee.getId()))
                 .andExpect(MockMvcResultMatchers.status().is(204));
 
-        assertTrue(employeeJpaRepository.findById(1L).isEmpty());
+        assertTrue(employeeJpaRepository.findById(savedEmployee.getId()).isEmpty());
     }
 
     @Test
