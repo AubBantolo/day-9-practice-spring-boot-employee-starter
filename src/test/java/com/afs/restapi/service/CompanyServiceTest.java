@@ -81,8 +81,8 @@ public class CompanyServiceTest {
     @Test
     void should_return_created_company_when_create_given_company_service_and_company() {
         // Given
-        Company company = new Company("OOCL");
-        Company savedCompany = new Company(1L, "OOCL");
+        Company company = new Company("Spring");
+        Company savedCompany = new Company(1L, "Spring");
         when(mockedCompanyRepository.save(company)).thenReturn(savedCompany);
 
         // When
@@ -90,7 +90,24 @@ public class CompanyServiceTest {
 
         // Then
         assertEquals(savedCompany.getId(), companyResponse.getId());
-        assertEquals("OOCL", companyResponse.getName());
+        assertEquals("Spring", companyResponse.getName());
     }
+
+    @Test
+    void should_return_updated_company_when_update_given_company_name() {
+        // Given
+        Company company = new Company(1L, "Spring");
+        Company updatedCompanyInfo = new Company(1L, "Thoughtworks");
+        when(mockedCompanyRepository.findById(company.getId())).thenReturn(Optional.of(company));
+        when(mockedCompanyRepository.save(any(Company.class))).thenReturn(updatedCompanyInfo);
+
+        // When
+        Company updatedCompany = companyService.update(company.getId(), updatedCompanyInfo);
+
+        // Then
+        assertEquals(updatedCompanyInfo.getId(), updatedCompany.getId());
+        assertEquals(updatedCompanyInfo.getName(), updatedCompany.getName());
+    }
+
 
 }
