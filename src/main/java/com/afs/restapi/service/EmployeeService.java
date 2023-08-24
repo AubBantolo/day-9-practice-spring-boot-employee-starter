@@ -3,6 +3,7 @@ package com.afs.restapi.service;
 import com.afs.restapi.entity.Employee;
 import com.afs.restapi.exception.EmployeeCreateException;
 import com.afs.restapi.exception.EmployeeNotFoundException;
+import com.afs.restapi.exception.EmployeeUpdateException;
 import com.afs.restapi.repository.EmployeeJpaRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,11 @@ public class EmployeeService {
                 .orElseThrow(EmployeeNotFoundException::new);
     }
 
-    public void update(Long id, Employee employee) {
+    public Employee update(Long id, Employee employee) {
         Employee toBeUpdatedEmployee = findById(id);
+        if (Boolean.TRUE.equals(toBeUpdatedEmployee.isInactive())) {
+            throw new EmployeeUpdateException();
+        }
         if (employee.getSalary() != null) {
             toBeUpdatedEmployee.setSalary(employee.getSalary());
         }
@@ -36,6 +40,7 @@ public class EmployeeService {
             toBeUpdatedEmployee.setAge(employee.getAge());
         }
         employeeJpaRepository.save(toBeUpdatedEmployee);
+        return toBeUpdatedEmployee;
     }
 
     public List<Employee> findAllByGender(String gender) {
