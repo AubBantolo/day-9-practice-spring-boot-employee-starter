@@ -2,12 +2,10 @@ package com.afs.restapi.service;
 
 import com.afs.restapi.entity.Employee;
 import com.afs.restapi.exception.EmployeeCreateException;
-import com.afs.restapi.exception.EmployeeNotFoundException;
 import com.afs.restapi.exception.EmployeeUpdateException;
 import com.afs.restapi.repository.EmployeeJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -16,8 +14,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 class EmployeeServiceTest {
@@ -131,6 +127,24 @@ class EmployeeServiceTest {
         assertEquals("Employee must be 18-65 years old.", employeeCreateException.getMessage());
     }
 
+    @Test
+    void should_return_updated_employee_when_update_given_employee_age_and_salary() {
+        // Given
+        Employee employee = new Employee(1L, "Lucy", 20, "Female", 3000);
+        employee.setActive(Boolean.TRUE);
+        Employee updatedEmployeeInfo = new Employee(null, null, 30, null, 10000);
+        when(mockedEmployeeRepository.findById(employee.getId())).thenReturn(Optional.of(employee));
+
+        // When
+        Employee updatedEmployee = employeeService.update(employee.getId(), updatedEmployeeInfo);
+
+        // Then
+        assertEquals("Lucy", updatedEmployee.getName());
+        assertEquals("Female", updatedEmployee.getGender());
+        assertEquals(30, updatedEmployee.getAge());
+        assertEquals(10000, updatedEmployee.getSalary());
+        verify(mockedEmployeeRepository).save(updatedEmployee);
+    }
 
     @Test
     void should_throw_exception_when_create_given_employee_service_and_employee_whose_age_is_greater_than_65() {
