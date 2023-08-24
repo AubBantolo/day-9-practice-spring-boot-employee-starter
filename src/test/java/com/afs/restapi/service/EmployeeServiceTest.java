@@ -112,7 +112,6 @@ class EmployeeServiceTest {
         assertTrue(employeeResponse.isActive());
     }
 
-
     @Test
     void should_throw_exception_when_create_given_employee_service_and_employee_whose_age_is_less_than_18() {
         //Given
