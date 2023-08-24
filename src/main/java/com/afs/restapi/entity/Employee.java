@@ -17,6 +17,8 @@ public class Employee {
     private Integer salary;
     private Long companyId;
     private static final Integer MIN_VALID_AGE = 18;
+
+    private static final Integer MAX_VALID_AGE = 65;
     private boolean isActive;
 
     public Employee() {
@@ -60,7 +62,7 @@ public class Employee {
     }
 
     public boolean hasInvalidAge() {
-        return getAge() < MIN_VALID_AGE ;
+        return getAge() < MIN_VALID_AGE || getAge() > MAX_VALID_AGE;
     }
 
     public boolean isActive() {
