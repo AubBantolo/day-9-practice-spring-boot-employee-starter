@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -59,5 +60,24 @@ class EmployeeServiceTest {
         assertEquals(employee.getAge(), foundEmployee.getAge());
         assertEquals(employee.getGender(), foundEmployee.getGender());
         assertEquals(employee.getSalary(), foundEmployee.getSalary());
+    }
+
+    @Test
+    void should_return_employees_by_given_gender_when_get_employees_given_employee_service() {
+        // Given
+        Employee alice = new Employee(null, "Alice", 24, "Female", 9000);
+        List<Employee> employees = List.of(alice);
+        when(mockedEmployeeRepository.findAllByGender("Female")).thenReturn(employees);
+
+        // When
+        List<Employee> foundEmployees = employeeService.findAllByGender("Female");
+
+        // Then
+        assertEquals(employees.size(), foundEmployees.size());
+        assertEquals(alice.getId(), foundEmployees.get(0).getId());
+        assertEquals(alice.getName(), foundEmployees.get(0).getName());
+        assertEquals(alice.getAge(), foundEmployees.get(0).getAge());
+        assertEquals(alice.getGender(), foundEmployees.get(0).getGender());
+        assertEquals(alice.getSalary(), foundEmployees.get(0).getSalary());
     }
 }
