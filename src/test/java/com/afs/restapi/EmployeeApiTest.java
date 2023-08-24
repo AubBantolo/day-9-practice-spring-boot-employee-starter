@@ -130,24 +130,22 @@ class EmployeeApiTest {
 
     @Test
     void should_find_employees_by_page() throws Exception {
-        Employee employeeZhangsan = getEmployeeBob();
-        Employee employeeSusan = getEmployeeSusan();
-        Employee employeeLisi = getEmployeeLily();
-        employeeJpaRepository.save(employeeZhangsan);
-        employeeJpaRepository.save(employeeSusan);
-        employeeJpaRepository.save(employeeLisi);
+
+        Employee employeeZhangsan = employeeJpaRepository.save(getEmployeeBob());
+        Employee employeeSusan = employeeJpaRepository.save(getEmployeeSusan());
+        Employee employeeLisi = employeeJpaRepository.save(getEmployeeLily());
 
         mockMvc.perform(get("/employees")
                         .param("pageNumber", "0")
                         .param("pageSize", "2"))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(employeeZhangsan.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(employeeZhangsan.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].age").value(employeeZhangsan.getAge()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].gender").value(employeeZhangsan.getGender()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].salary").value(employeeZhangsan.getSalary()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(employeeSusan.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value(employeeSusan.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].age").value(employeeSusan.getAge()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].gender").value(employeeSusan.getGender()))
