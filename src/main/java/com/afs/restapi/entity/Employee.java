@@ -17,8 +17,7 @@ public class Employee {
     private Integer salary;
     private Long companyId;
     private static final Integer MIN_VALID_AGE = 18;
-
-    private Boolean active;
+    private boolean isActive;
 
     public Employee() {
     }
@@ -29,6 +28,7 @@ public class Employee {
         this.age = age;
         this.gender = gender;
         this.salary = salary;
+        this.isActive = true;
     }
 
     public void setId(Long id) {
@@ -63,9 +63,10 @@ public class Employee {
         return getAge() < MIN_VALID_AGE ;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public boolean isActive() {
+        return isActive;
     }
+
     public Integer getAge() {
         return age;
     }

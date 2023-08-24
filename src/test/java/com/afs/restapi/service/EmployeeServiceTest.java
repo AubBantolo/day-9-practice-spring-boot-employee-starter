@@ -103,16 +103,35 @@ class EmployeeServiceTest {
     }
 
     @Test
+    void should_set_employee_active_status_to_true_default_when_create_new_employee_given_employee_active_status() {
+        //Given
+        Employee employee = new Employee(null, "Lucy", 19, "Female", 3000);
+        Employee savedEmployee = new Employee(null, "Lucy", 20, "Female", 3000);
+
+        when(mockedEmployeeRepository.save(employee)).thenReturn(savedEmployee);
+        //When
+        Employee employeeResponse = employeeService.create(employee);
+        //Then
+        assertTrue(employeeResponse.isActive());
+    }
+
+    @Test
     void should_throw_exception_when_create_given_employee_service_and_employee_whose_age_is_less_than_18() {
         //Given
         Employee employee = new Employee(null, "Lucy", 16, "Female", 3000);
-        //When, Then
+
+        //When
         EmployeeCreateException employeeCreateException = assertThrows(EmployeeCreateException.class, () -> {
             employeeService.create(employee);
         });
+
+        //Then
         assertEquals("Employee must be 18-65 years old.", employeeCreateException.getMessage());
 
     }
+
+
+
 
 
 }
