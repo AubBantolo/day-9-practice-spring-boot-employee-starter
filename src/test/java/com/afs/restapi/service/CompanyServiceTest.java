@@ -1,6 +1,7 @@
 package com.afs.restapi.service;
 
 import com.afs.restapi.entity.Company;
+import com.afs.restapi.entity.Employee;
 import com.afs.restapi.repository.CompanyJpaRepository;
 import com.afs.restapi.repository.EmployeeJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,4 +55,24 @@ public class CompanyServiceTest {
         assertEquals(company.getName(), foundCompany.getName());
     }
 
+    @Test
+    void should_return_employees_by_given_company_when_get_find_employees_by_company_id_given_company_service() {
+        // Given
+        Company company = new Company(1L, "Spring");
+        Employee alice = new Employee(1L, "Alice", 24, "Female", 9000);
+        alice.setCompanyId(company.getId());
+
+        List<Employee> employees = List.of(alice);
+        when(mockedEmployeeRepository.findByCompanyId(company.getId())).thenReturn(employees);
+
+        // When
+        List<Employee> foundEmployees = companyService.findEmployeesByCompanyId(company.getId());
+
+        // Then
+        assertEquals(foundEmployees.get(0).getId(), alice.getId());
+        assertEquals(foundEmployees.get(0).getName(), alice.getName());
+        assertEquals(foundEmployees.get(0).getAge(), alice.getAge());
+        assertEquals(foundEmployees.get(0).getGender(), alice.getGender());
+        assertEquals(foundEmployees.get(0).getSalary(), alice.getSalary());
+    }
 }
