@@ -7,6 +7,9 @@ import com.afs.restapi.repository.EmployeeJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +23,6 @@ class EmployeeServiceTest {
 
     private EmployeeService employeeService;
     private EmployeeJpaRepository mockedEmployeeRepository;
-
-    @Autowired
-    private EmployeeJpaRepository employeeJpaRepository;
 
     @BeforeEach
     void setUp() {
@@ -130,6 +130,7 @@ class EmployeeServiceTest {
         assertEquals("Employee must be 18-65 years old.", employeeCreateException.getMessage());
     }
 
+
     @Test
     void should_throw_exception_when_create_given_employee_service_and_employee_whose_age_is_greater_than_65() {
         // Given
@@ -144,4 +145,22 @@ class EmployeeServiceTest {
 
 
 
+    @Test
+    void should_paged_employees_when_get_employees_by_page_given_employee_service_and_pageNumber_and_pageSize() {
+        // Given
+        Employee alice = new Employee(null, "Alice", 24, "Female", 9000);
+        List<Employee> employees = List.of(alice);
+        Page<Employee> page = new PageImpl<>(employees);
+        when(mockedEmployeeRepository.findAll(any(PageRequest.class))).thenReturn(page);
+
+        // When
+        List<Employee> pagedEmployees = employeeService.findByPage(1, 1);
+
+        // Then
+        assertEquals(pagedEmployees.get(0).getId(), alice.getId());
+        assertEquals(pagedEmployees.get(0).getName(), alice.getName());
+        assertEquals(pagedEmployees.get(0).getAge(), alice.getAge());
+        assertEquals(pagedEmployees.get(0).getGender(), alice.getGender());
+        assertEquals(pagedEmployees.get(0).getSalary(), alice.getSalary());
+    }
 }
