@@ -1,12 +1,15 @@
 package com.afs.restapi.service;
 
 import com.afs.restapi.entity.Employee;
+import com.afs.restapi.exception.EmployeeCreateException;
+import com.afs.restapi.exception.EmployeeNotFoundException;
 import com.afs.restapi.repository.EmployeeJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -98,4 +101,18 @@ class EmployeeServiceTest {
         assertEquals("Female", employeeResponse.getGender());
         assertEquals(3000, employeeResponse.getSalary());
     }
+
+    @Test
+    void should_throw_exception_when_create_given_employee_service_and_employee_whose_age_is_less_than_18() {
+        //Given
+        Employee employee = new Employee(null, "Lucy", 16, "Female", 3000);
+        //When, Then
+        EmployeeCreateException employeeCreateException = assertThrows(EmployeeCreateException.class, () -> {
+            employeeService.create(employee);
+        });
+        assertEquals("Employee must be 18-65 years old.", employeeCreateException.getMessage());
+
+    }
+
+
 }
