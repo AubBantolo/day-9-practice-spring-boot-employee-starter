@@ -101,21 +101,19 @@ class CompanyApiTest {
 
     @Test
     void should_find_companies_by_page() throws Exception {
-        Company company1 = getCompany1();
-        Company company2 = getCompany2();
-        Company company3 = getCompany3();
-        companyJpaRepository.save(company1);
-        companyJpaRepository.save(company2);
-        companyJpaRepository.save(company3);
+
+        Company company1 = companyJpaRepository.save(getCompany1());
+        Company company2 = companyJpaRepository.save(getCompany2());
+        Company company3 = companyJpaRepository.save(getCompany3());
 
         mockMvc.perform(get("/companies")
                         .param("pageNumber", "1")
                         .param("pageSize", "2"))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(company1.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(company1.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(company2.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value(company2.getName()))
         ;
     }
@@ -123,16 +121,16 @@ class CompanyApiTest {
     @Test
     void should_find_company_by_id() throws Exception {
         Company company = getCompany1();
-        companyJpaRepository.save(company);
+        Company savedCompany = companyJpaRepository.save(company);
         Employee employee = getEmployee(company);
-        employeeJpaRepository.save(employee);
+        Employee savedEmployee = employeeJpaRepository.save(employee);
 
-        mockMvc.perform(get("/companies/{id}", 1))
+        mockMvc.perform(get("/companies/{id}", savedCompany.getId()))
                 .andExpect(MockMvcResultMatchers.status().is(200))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(savedCompany.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(company.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.employees.length()").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.employees[0].id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.employees[0].id").value(savedEmployee.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.employees[0].name").value(employee.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.employees[0].age").value(employee.getAge()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.employees[0].gender").value(employee.getGender()))
@@ -142,11 +140,11 @@ class CompanyApiTest {
     @Test
     void should_find_employees_by_companies() throws Exception {
         Company company = getCompany1();
-        companyJpaRepository.save(company);
+        Company savedCompany = companyJpaRepository.save(company);
         Employee employee = getEmployee(company);
-        employeeJpaRepository.save(employee);
+        Employee savedEmployee = employeeJpaRepository.save(employee);
 
-        mockMvc.perform(get("/companies/{companyId}/employees", 1L))
+        mockMvc.perform(get("/companies/{companyId}/employees", savedCompany.getId()))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(employee.getId()))
