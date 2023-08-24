@@ -25,5 +25,22 @@ class EmployeeServiceTest {
         mockedEmployeeRepository = mock(EmployeeJpaRepository.class);
         employeeService = new EmployeeService(mockedEmployeeRepository);
     }
-    
+
+    @Test
+    void should_return_all_employees_when_get_employees_given_employee_service() {
+        // Given
+        Employee employee = new Employee(1L, "Lucy", 20, "Female", 3000);
+        List<Employee> employees = List.of(employee);
+        when(mockedEmployeeRepository.findAll()).thenReturn(employees);
+
+        // When
+        List<Employee> allEmployees = employeeService.findAll();
+
+        // Then
+        assertEquals(allEmployees.get(0).getId(), employee.getId());
+        assertEquals(allEmployees.get(0).getName(), employee.getName());
+        assertEquals(allEmployees.get(0).getAge(), employee.getAge());
+        assertEquals(allEmployees.get(0).getGender(), employee.getGender());
+        assertEquals(allEmployees.get(0).getSalary(), employee.getSalary());
+    }
 }
