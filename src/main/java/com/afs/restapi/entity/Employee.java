@@ -20,6 +20,7 @@ public class Employee {
 
     private static final Integer MAX_VALID_AGE = 65;
     private boolean isActive;
+    private boolean isInactive;
     private Boolean active;
 
     public Employee() {
@@ -32,11 +33,13 @@ public class Employee {
         this.gender = gender;
         this.salary = salary;
         this.isActive = true;
+        this.isInactive = false;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
+
 
     public void setName(String name) {
         this.name = name;

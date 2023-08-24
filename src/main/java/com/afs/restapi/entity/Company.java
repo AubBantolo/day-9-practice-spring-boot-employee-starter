@@ -10,6 +10,10 @@ public class Company {
     private Long id;
     private String name;
 
+    private Boolean active;
+
+    private boolean isActive;
+
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "companyId")
     private List<Employee> employees;
@@ -20,11 +24,13 @@ public class Company {
     public Company(Long id, String name) {
         this.id = id;
         this.name = name;
+        this.isActive = true;
     }
 
     public Company(String name) {
         this.name = name;
     }
+
     public Long getId() {
         return id;
     }
@@ -47,5 +53,13 @@ public class Company {
 
     public void setEmployees(List<Employee> employees) {
         this.employees = employees;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Boolean isActive() {
+        return active;
     }
 }
