@@ -105,6 +105,4 @@ public class CompanyServiceTest {
         assertEquals(updatedCompanyInfo.getId(), updatedCompany.getId());
         assertEquals(updatedCompanyInfo.getName(), updatedCompany.getName());
     }
-    
-
 }
