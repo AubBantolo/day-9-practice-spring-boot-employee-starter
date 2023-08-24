@@ -1,10 +1,10 @@
 package com.afs.restapi.service;
 
 import com.afs.restapi.entity.Company;
+import com.afs.restapi.entity.Employee;
 import com.afs.restapi.exception.CompanyNotFoundException;
 import com.afs.restapi.repository.CompanyJpaRepository;
 import com.afs.restapi.repository.EmployeeJpaRepository;
-import com.afs.restapi.entity.Employee;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class CompanyService {
     }
 
     public List<Company> findByPage(Integer pageNumber, Integer pageSize) {
-        return companyJpaRepository.findAll(PageRequest.of(pageNumber-1, pageSize)).toList();
+        return companyJpaRepository.findAll(PageRequest.of(pageNumber - 1, pageSize)).toList();
     }
 
     public Company findById(Long id) {
