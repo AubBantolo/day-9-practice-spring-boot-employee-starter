@@ -10,8 +10,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.*;
 
 class EmployeeServiceTest {
 
@@ -79,5 +79,23 @@ class EmployeeServiceTest {
         assertEquals(alice.getAge(), foundEmployees.get(0).getAge());
         assertEquals(alice.getGender(), foundEmployees.get(0).getGender());
         assertEquals(alice.getSalary(), foundEmployees.get(0).getSalary());
+    }
+
+    @Test
+    void should_return_created_active_employee_when_create_given_employee_service_and_employee_with_valid_age() {
+        // Given
+        Employee employee = new Employee(null, "Lucy", 20, "Female", 3000);
+        Employee savedEmployee = new Employee(1L, "Lucy", 20, "Female", 3000);
+        when(mockedEmployeeRepository.save(employee)).thenReturn(savedEmployee);
+
+        // When
+        Employee employeeResponse = employeeService.create(employee);
+
+        // Then
+        assertEquals(savedEmployee.getId(), employeeResponse.getId());
+        assertEquals("Lucy", employeeResponse.getName());
+        assertEquals(20, employeeResponse.getAge());
+        assertEquals("Female", employeeResponse.getGender());
+        assertEquals(3000, employeeResponse.getSalary());
     }
 }
